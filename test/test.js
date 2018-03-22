@@ -1,64 +1,79 @@
-
 var plugin = require('../lib/index.js');
 var assert = require('chai').assert;
 
 describe('plugin', function() {
+
     describe('structure', function() {
         it('should contain processors object', function() {
             assert.property(plugin, 'processors', '.processors property is not defined');
         });
-        it('should contain .json property', function() {
-            assert.property(plugin.processors, '.json', '.json property is not defined');
+        it('should contain .lang property', function() {
+            assert.property(plugin.processors, '.lang', '.lang property is not defined');
         });
-        it('should contain .json.preprocess property', function() {
-            assert.property(plugin.processors['.json'], 'preprocess',
-                '.json.preprocess is not defined');
+        it('should contain .lang.preprocess property', function() {
+            assert.property(plugin.processors['.lang'], 'preprocess',
+                '.lang.preprocess is not defined');
         });
-        it('should contain .json.postprocess property', function() {
-            assert.property(plugin.processors['.json'], 'postprocess',
-                '.json.postprocess is not defined');
+        it('should contain .lang.postprocess property', function() {
+            assert.property(plugin.processors['.lang'], 'postprocess',
+                '.lang.postprocess is not defined');
         });
     });
-    describe('preprocess', function() {
-        var preprocess = plugin.processors['.json'].preprocess;
-        it('should return the same text', function() {
-            var fileName = 'reallyLongFileName';
-            var text = 'long long text';
 
-            var newText = preprocess(text, fileName);
-            assert.isArray(newText, 'preprocess should return array');
-            assert.strictEqual(newText[0], text);
-        });
-    });
     describe('postprocess', function() {
-        var preprocess = plugin.processors['.json'].preprocess;
-        var postprocess = plugin.processors['.json'].postprocess;
+        var preprocess = plugin.processors['.lang'].preprocess;
+        var postprocess = plugin.processors['.lang'].postprocess;
         var singleQuotes = {
-            fileName: 'singleQuotes.json',
+            fileName: 'singleQuotes.lang',
             text: "{'x': 0}"
         };
         var trailingCommas = {
-            fileName: 'trailing.json',
+            fileName: 'trailing.lang',
             text: '{ "x": 0, }'
         };
         var multipleErrors = {
-            fileName: 'multipleErrors.json',
+            fileName: 'multipleErrors.lang',
             text: '{ x: 200, \'what\': 0 }'
         };
         var trailingText = {
-            fileName: 'trailingtext.json',
+            fileName: 'trailingtext.lang',
             text: '{ "my_string": "hello world" }' + ' \n' +  'bad_text'
         };
-
-        var good = {
-            fileName: 'good.json',
-            text: JSON.stringify({ a: [1, 2, 3], b: 'cat', c: {x: 1} })
+        var noID = {
+            fileName: 'noID.lang',
+            text: '{"_author":"b@houzz.com","GREETING":"Hello"}'
         };
+        var noAuthor = {
+            fileName: 'noAuthor.lang',
+            text: '{"_id":"d318cb057308c97f8e5ec46a8a846648","GREETING":"Hello"}'
+        };
+        var emptyID = {
+            fileName: 'emptyID.lang',
+            text: '{"_id":"","_author":"b@houzz.com","GREETING":"Hello"}'
+        };
+        var emptyAuthor = {
+            fileName: 'emptyAuthor.lang',
+            text: '{"_id":"d318cb057308c97f8e5ec46a8a846648","_author":"","GREETING":"Hello"}'
+        };
+        var badEmail = {
+            fileName: 'badEmail.lang',
+            text: '{"_id":"d318cb057308c97f8e5ec46a8a846648","_author":"brett","GREETING":"Hello"}'
+        };
+        var valid = {
+            fileName: 'valid.lang',
+            text: '{"_id":"d318cb057308c97f8e5ec46a8a846648","_author":"b@houzz.com","GREETING":"Hello"}'
+        };
+
         preprocess(singleQuotes.text, singleQuotes.fileName);
         preprocess(trailingCommas.text, trailingCommas.fileName);
         preprocess(multipleErrors.text, multipleErrors.fileName);
         preprocess(trailingText.text, trailingText.fileName);
-        preprocess(good.text, good.fileName);
+        preprocess(valid.text, valid.fileName);
+        preprocess(noAuthor.text, noAuthor.fileName);
+        preprocess(noID.text, noID.fileName);
+        preprocess(emptyID.text, emptyID.fileName);
+        preprocess(emptyAuthor.text, emptyAuthor.fileName);
+        preprocess(badEmail.text, badEmail.fileName);
 
         it('should return an error for the single quotes', function() {
             var errors = postprocess([], singleQuotes.fileName);
@@ -85,9 +100,6 @@ describe('plugin', function() {
             assert.isArray(errors, 'should return an array');
             assert.lengthOf(errors, 1, 'should return one error');
             assert.isString(errors[0].message, 'should have a valid message');
-
-            // we don't validate the line/column numbers since they don't actually
-            // mean anything for this error. JSHint just bails on the file.
         });
 
         it('should return multiple errors for multiple errors', function() {
@@ -96,10 +108,34 @@ describe('plugin', function() {
             assert.lengthOf(errors, 2, 'should return one error');
         });
 
-        it('should return no errors for good json', function() {
-            var errors = postprocess([], good.fileName);
-            assert.isArray(errors, 'should return an array');
-            assert.lengthOf(errors, 0, 'good json shouldnt have any errors');
+        it('error when no "_id" field exists', function() {
+            var errors = postprocess([], noID.fileName);
+            assert.deepEqual(errors, [plugin.NO_ID_ERROR]);
+        });
+
+        it('error when no "_author" field exists', function() {
+            var errors = postprocess([], noAuthor.fileName);
+            assert.deepEqual(errors, [plugin.NO_AUTHOR_ERROR]);
+        });
+
+        it('error when "_id" is empty', function() {
+            var errors = postprocess([], emptyID.fileName);
+            assert.deepEqual(errors, [plugin.NO_ID_ERROR]);
+        });
+
+        it('error when "_author" is empty', function() {
+            var errors = postprocess([], emptyAuthor.fileName);
+            assert.deepEqual(errors, [plugin.NO_AUTHOR_ERROR]);
+        });
+
+        it('error when "_author" is invalid email', function() {
+            var errors = postprocess([], badEmail.fileName);
+            assert.deepEqual(errors, [plugin.INVALID_AUTHOR_ERROR]);
+        });
+
+        it('should return no errors for valid lang file', function() {
+            var errors = postprocess([], valid.fileName);
+            assert.deepEqual(errors, [], 'valid lang file shouldnt have any errors');
         });
     });
 });

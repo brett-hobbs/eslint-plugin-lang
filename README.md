@@ -1,8 +1,6 @@
-# eslint-plugin-json
+# eslint-plugin-lang
 
-[![Build Status](https://travis-ci.org/azeemba/eslint-plugin-json.svg)](https://travis-ci.org/azeemba/eslint-plugin-json) [![Code Climate](https://codeclimate.com/github/azeemba/eslint-plugin-json/badges/gpa.svg)](https://codeclimate.com/github/azeemba/eslint-plugin-json)
-
-Lint JSON files
+Lint `.lang` files
 
 ## Installation
 
@@ -12,34 +10,20 @@ You'll first need to install [ESLint](http://eslint.org):
 $ npm i eslint --save-dev
 ```
 
-Next, install `eslint-plugin-json`:
+Next, install `eslint-plugin-lang`:
 
 ```
-$ npm install eslint-plugin-json --save-dev
+$ npm install eslint-plugin-lang --save-dev
 ```
-
-**Note:** If you installed ESLint globally (using the `-g` flag) then you must also install `eslint-plugin-json` globally.
 
 ## Usage
 
-Add `json` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
+Add `lang` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
 
-```json
+```lang
 {
     "plugins": [
-        "json"
+        "lang"
     ]
 }
 ```
-
-You can run ESLint on individual JSON files or you can use the `--ext` flag to add JSON files to the list.
-
-```
-eslint . --ext .json --ext .js
-eslint example.json
-```
-
-
-
-
-

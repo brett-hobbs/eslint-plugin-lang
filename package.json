@@ -1,7 +1,7 @@
 {
-  "name": "eslint-plugin-json",
+  "name": "eslint-plugin-lang",
   "version": "1.2.0",
-  "description": "Lint JSON files",
+  "description": "Lint .lang json files",
   "keywords": [
     "eslint",
     "eslintplugin",
@@ -9,17 +9,14 @@
     "json",
     "eslint-plugin-json"
   ],
-  "author": "Azeem Bande-Ali <a.bandeali@gmail.com>",
+  "author": "Brett Hobbs",
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/azeemba/eslint-plugin-json"
-  },
-  "bugs": {
-    "url": "https://github.com/azeemba/eslint-plugin-json/issues"
+    "url": "https://github.com/brett-hobbs/eslint-plugin-lang"
   },
   "dependencies": {
     "jshint": "^2.8.0"
@@ -32,6 +29,6 @@
   "engines": {
     "node": ">=0.10.0"
   },
-  "url": "https://github.com/azeemba/eslint-plugin-json",
+  "url": "https://github.com/brett-hobbs/eslint-plugin-lang",
   "license": "ISC"
 }
