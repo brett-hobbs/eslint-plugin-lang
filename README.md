@@ -6,14 +6,12 @@ Lint `.lang` files
 
 You'll first need to install [ESLint](http://eslint.org):
 
-```
-$ npm i eslint --save-dev
-```
-
 Next, install `eslint-plugin-lang`:
 
 ```
-$ npm install eslint-plugin-lang --save-dev
+$ npm install git+https://git@github.com/brett-hobbs/eslint-plugin-lang.git --save-dev
+
+$ yarn add --dev git+https://git@github.com/brett-hobbs/eslint-plugin-lang.git
 ```
 
 ## Usage
