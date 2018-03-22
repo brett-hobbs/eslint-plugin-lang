@@ -1,10 +1,10 @@
 # eslint-plugin-lang
 
-Lint `.lang` files
+[ESLint](http://eslint.org) plugin for linting `.lang` JSON files.
+
+Ensures proper JSON formatting and a valid _id and _author field in each file.
 
 ## Installation
-
-You'll first need to install [ESLint](http://eslint.org):
 
 Next, install `eslint-plugin-lang`:
 
